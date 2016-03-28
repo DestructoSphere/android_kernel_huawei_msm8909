@@ -1,0 +1,88 @@
+
+/ {
+	qrd_batterydata: qcom,battery-data {
+		qcom,rpull-up-kohm = <68>;
+		qcom,vref-batt-therm = <1800000>;
+                #include "HB3742A0EBC+_ATL_SCUD-4v35-2200mah.dtsi"
+                #include "HB3742A0EBC+_SDI_XWD-4v35-2200mah.dtsi"
+                #include "HB474284RBC_LG_SCUD-4v35-2000mah.dtsi"
+	};
+};
+
+&pm8909_bms {
+	status = "ok";
+	qcom,low-voltage-threshold = <3350000>;
+	qcom,battery-data = <&qrd_batterydata>;
+	qcom,use-reported-soc;
+	qcom,resume-soc = <97>;
+};
+
+&pm8909_chg {
+	status = "okay";
+	qcom,vddmax-mv = <4350>;
+	qcom,vddsafe-mv = <4380>;
+	qcom,tchg-mins = <360>;
+};
+
+&pm8909_mpps {
+	mpp@a100 {
+		qcom,mode = <4>; // QPNP_PIN_MODE_AIN
+		qcom,src-sel = <0>; // QPNP_PIN_SEL_FUNC_CONSTANT
+		qcom,ain-route = <1>; // QPNP_PIN_AIN_AMUX_CH8
+		qcom,master-en = <1>; // Enable features
+	};
+};
+
+&pm8909_vadc {
+	cpu_mpp_number = <17>;
+	pa_mpp_number = <54>;
+
+	chan@11 {
+		label = "mpp2_div1";
+		reg = <0x11>;
+		qcom,decimation = <0>; //512 sampling rate
+		qcom,pre-div-channel-scaling = <0>; //1:1 scaling
+		qcom,calibration-type = "absolute"; //Use 625mV & 1.25V reference voltage
+		qcom,scale-function = <10>; //convert raw adc code to voltage
+		qcom,hw-settle-time = <2>; //200us
+		qcom,fast-avg-setup = <0>; //with only one average measurement
+	};
+
+	chan@36 {
+		qcom,scale-function = <10>;
+	};
+};
+&pm8909_rtc{
+	    qcom,qpnp-rtc-alarm-pwrup = <1>;
+};
+
+/{
+	charger_core: charger_core{
+		compatible = "huawei,charger_core";
+		charger_type = "Linear_charger";
+		iin_ac = <2000>;
+		status = "ok";
+	};
+};
+
+&spmi_bus{
+	qcom,pm8909@0 {
+		huawei_charger: qcom,huawei_charger{
+			compatible = "huawei,charger";
+			chgr-base = <0x1000>;
+			bat-if-base = <0x1200>;
+			usb-chgpth-base = <0x1300>;
+			misc-base = <0x1600>;
+			bms-base = <0x4000>;
+			status = "ok";
+		};
+	};
+};
+
+/{
+	huawei_dsm_charger: huawei_dsm_charger{
+		compatible = "huawei,dsm_charger";
+		status = "ok";
+	};
+};
+

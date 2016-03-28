@@ -1,0 +1,38 @@
+
+
+config FOCALTECH_F6X06_TP_ENABLE
+	bool "Enable Focaltech for Ft6x06-Tp Driver"
+	depends on TOUCHSCREEN_HUAWEI_FOCALTECH_FT6X06
+	default n
+	help
+      	  enable the f6x06_tp of focaltech
+
+config FOCALTECH_FT6X06_TS 
+	tristate "Focaltech_ft6x06_ts"
+	depends on FOCALTECH_F6X06_TP_ENABLE
+	default n
+	help
+	  the first file for ft6x06 touchpanel driver  
+
+config FOCALTECH_FOCALTECH_USERDATA
+	tristate "Focaltech Ctl Touchscreen"
+	depends on FOCALTECH_FT6X06_TS
+	default n
+	help
+	  userdata interface
+
+config FOCALTECH_FT6X06_UPDATA_FW
+	tristate "Focaltech_ft6x06_ex_fun"
+	depends on FOCALTECH_FT6X06_TS
+	default n
+	help
+	  updata interface
+
+config FOCALTECH_FT6X06_SYSDEBUG 
+	tristate "Focaltech_ft6x06_sysdbug"
+	depends on FOCALTECH_FT6X06_TS && FOCALTECH_FT6X06_UPDATA_FW
+	default n
+	help
+	  the first file for ft6x06 sysdebug  
+
+#delete define of FOCALTECH_FT6X06_SCAP_TEST

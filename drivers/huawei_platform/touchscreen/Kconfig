@@ -1,0 +1,71 @@
+config CYTTSP5_CS445A
+	tristate "cypress cs445a touch screen driver"
+	default n
+	help
+	  Say Y here if you have cypress touch device us cyttsp5 to connected to your system and want
+	  it to be available to applications. 
+	  Say N here if you have no cypress touch device use cyttsp5 in your system.
+	  If unsure, say Y.
+	  To compile this driver as a module, choose M here: the
+	  module will be called input.
+source "drivers/huawei_platform/touchscreen/cyttsp5_cs445a/Kconfig"
+
+config SYNAPTICS_DSX
+	tristate "synaptics touch screen driver"
+	default n
+	help
+	  Say Y here if you have synaptics s3207 device connected to your system and want
+	  it to be available to applications. 
+	  Say N here if you have no synaptics s3207 device in your system.
+	  If unsure, say Y.
+	  To compile this driver as a module, choose M here: the
+	  module will be called input.
+source "drivers/huawei_platform/touchscreen/synaptics_dsx/Kconfig"
+
+config GT_9XX
+	tristate "goodix touch screen driver"
+	default n
+	help
+	  Say Y here if you have goodix touch device connected to your system and want
+	  it to be available to applications. 
+	  Say N here if you have no goodix touch device in your system.	  
+	  If unsure, say Y.
+	  To compile this driver as a module, choose M here: the
+	  module will be called input.
+source "drivers/huawei_platform/touchscreen/gt9xx/Kconfig"
+
+config MSTAR_2142
+	tristate "mstar 2142 touch screen driver"
+	default n
+	help
+	  Say Y here if you have mstar 2142 touch device connected to your system and want
+	  it to be available to applications. 
+	  Say N here if you have no mstar 2142 touch device in your system.
+	  If unsure, say Y.
+	  To compile this driver as a module, choose M here: the
+	  module will be called input.
+source "drivers/huawei_platform/touchscreen/mstar_2142/Kconfig"
+
+config FOCALTECH_6X36
+	tristate "focaltech 6x06 touch screen driver"
+	default n
+	help
+	  Say Y here if you have focaltech 6x06 touch device connected to your system and want
+	  it to be available to applications. 
+	  Say N here if you have no focaltech 6x06 touch device in your system.
+	  If unsure, say Y.
+	  To compile this driver as a module, choose M here: the
+	  module will be called input.
+source "drivers/huawei_platform/touchscreen/focaltech_6x36/Kconfig"
+
+config NOVATEK_205
+    tristate "novatek 205 touch screen driver"
+    default n
+    help
+      Say Y here if you have novatek 205 touch device connected to your system and want
+      it to be available to applications. 
+      Say N here if you have no novatek 205 touch device in your system.
+      If unsure, say Y.
+      To compile this driver as a module, choose M here: the
+      module will be called input.
+source "drivers/huawei_platform/touchscreen/novatek_205/Kconfig"

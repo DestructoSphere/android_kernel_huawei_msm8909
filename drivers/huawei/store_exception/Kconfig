@@ -1,0 +1,9 @@
+menu HUAWEI_STORE_EXCEPTION
+
+config  HUAWEI_STORE_EXCEPTION
+        default n
+	bool "huawei store exception"
+	help
+          huawei store exception control
+
+endmenu

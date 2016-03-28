@@ -1,0 +1,12 @@
+/ {
+    huawei_audio_info {
+        compatible = "huawei,hw_audio_info";
+        product-identifier = "SCALE";
+        status = "ok";
+        builtin-master-mic-exist;
+        builtin-2nd-mic-exist;
+        hand_held_master_mic_strategy;
+        loud_speaker_second_mic_strategy;
+    };
+};
+

@@ -1,0 +1,168 @@
+/*Add synaptics new driver "Synaptics DSX I2C V2.0"*/
+/* Open holster flag */
+/*Change i2c frepuence from 100kHZ to 400kHZ*/
+/*Open fast-relax config for better gesture performance*/
+&tlmm_pinmux {
+	cyttsp5_int_pin {
+		qcom,pins = <&gp 13>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "cyttsp5-irq";
+		cyttsp5_int_default: cyttsp5_int_default {
+			drive-strength = <2>;
+			bias-disable;
+		};
+		cyttsp5_int_sleep: cyttsp5_int_sleep {
+			drive-strength = <2>;
+			bias-disable;
+		};
+	};
+};
+&soc {
+	i2c@78b9000 { /* BLSP1 QUP5 */
+		status = "ok";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		qcom,clk-freq-out = <400000>;
+		
+		cyttsp5@1c {
+			compatible = "cy,cyttsp5_i2c_adapter";
+			reg = <0x1c>;
+			pinctrl-names = "int_default","int_sleep";
+			pinctrl-0 = <&cyttsp5_int_default>;
+			pinctrl-1 = <&cyttsp5_int_sleep>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <13 0x2008>;
+			cy,adapter_id = "cyttsp5_i2c_adapter";
+			/*vdd-supply = <&pm8916_l17>;*/
+			/*vcc_i2c-supply = <&pm8916_l16>;*/
+
+			cy,core {
+				cy,name = "cyttsp5_core";
+				cy,product_name = "SCALE";
+
+				cy,irq-gpio = <&msm_gpio 13 0x2008>;
+				cy,reset-gpio = <&msm_gpio 12 0x0>;
+				cy,vdd-type = <1>;      /* 0:null, 1:gpio, 2:pmu*/
+				cy,vbus-type = <0>;    /* 0:null, 1:gpio, 2:pmu*/
+				cy,vdd-en-gpio = <&msm_gpio 97 0x0>;
+				/*cy,vdd = "vdd";*/
+				/*cy,vbus = "vcc_i2c";*/
+				
+				cy,hid_desc_register = <1>;
+				/* CY_CORE_FLAG_WAKE_ON_GESTURE | CY_CORE_FLAG_RESTORE_PARAMETERS */
+				cy,flags = <5>;
+				/* CY_CORE_EWG_NONE */
+				/* Gestures that supported:                           */
+				/* bit0  Double tap                                        */
+				/* bit1  Single finger slide from left to right     */
+				/* bit2  Single finger slide from right to left     */
+				/* bit3  Single finger slide from top to bottom  */
+				/* bit4  Single finger slide from bottom to top  */
+				/* bit5  Double finger slide from top to bottom--disable for holster*/
+				/* bit6  Single finger slide circle                     */
+				/* bit7  Single finger write letter c                  */
+				/* bit8  Single finger write letter e                  */
+				/* bit9  Single finger write letter m                 */
+				/* bit10 Single finger write letter w                 */
+				/* bit11 Palm off screen                                */
+				cy,easy_wakeup_supported_gestures = <0xF81>;
+
+				/*Defination of report key value  for different gestures*/
+				cy,easy_wakeup_gesture_keys = 
+				<	59 /*0.Double tap:KEY_F1*/
+					60 /*1.Single finger slide from left to right*/
+					61 /*2.Single finger slide from right to left:KEY_F3*/
+					62 /*3.Single finger slide from top to bottom*/
+					63 /*4.Single finger slide from bottom to top:KEY_F5*/
+					64 /*5.Single finger slide circle clockwise*/
+					65 /*6.Single finger slide circle counter-clockwise*/
+					66 /*7.Single finger write letter c*/
+					67 /*8.Single finger write letter e:KEY_F9*/
+					68 /*9.Single finger write letter m*/
+					87 /*10.Single finger write letter w:KEY_F11*/
+					88 /*11.Palm off screen*/
+				>;
+
+				cy,double_tap_enabled = <1>;
+				/* Double-tap-zone defined by huawei */
+				/* Shielded area is:1cm left,1cm right,3cm up,2cm down */
+				cy,dtz_x0 = <116>;
+				cy,dtz_y0 = <349>;
+				cy,dtz_x1 = <604>;
+				cy,dtz_y1 = <1047>;
+				cy,btn_keys = <139	/* KEY_MENU */
+					       158>;	/* KEY_BACK */
+				cy,btn_keys-tag = <0>;
+				cy,fw_upgrade_start_ver = <0>;
+				cy,mt {
+					cy,name = "cyttsp5_mt";
+
+					cy,inp_dev_name = "cyttsp5_mt";
+					cy,flags = <0>;
+					cy,abs =
+						/* ABS_MT_POSITION_X, CY_ABS_MIN_X, CY_ABS_MAX_X, 0, 0 */
+						<0x35 0 880 0 0
+						/* ABS_MT_POSITION_Y, CY_ABS_MIN_Y, CY_ABS_MAX_Y, 0, 0 */
+						0x36 0 1280 0 0
+						/* ABS_MT_PRESSURE, CY_ABS_MIN_P, CY_ABS_MAX_P, 0, 0 */
+						0x3a 0 255 0 0
+						/* CY_IGNORE_VALUE, CY_ABS_MIN_W, CY_ABS_MAX_W, 0, 0 */
+						0xffff 0 255 0 0
+						/* ABS_MT_TRACKING_ID, CY_ABS_MIN_T, CY_ABS_MAX_T, 0, 0 */
+						0x39 0 15 0 0
+						/* ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0 */
+						0x30 0 255 0 0
+						/* ABS_MT_TOUCH_MINOR, 0, 255, 0, 0 */
+						0x31 0 255 0 0
+						/* ABS_MT_ORIENTATION, -127, 127, 0, 0 */
+						0x34 0xffffff81 127 0 0
+						/* ABS_MT_TOOL_TYPE, 0, MT_TOOL_MAX, 0, 0 */
+						/* 0x37 0 1 0 0 */
+						/* ABS_DISTANCE, 0, 255, 0, 0 */
+						0x19 0 255 0 0>;
+
+					cy,vkeys_x = <720>;
+					cy,vkeys_y = <1280>;
+
+					cy,virtual_keys = /* KeyCode CenterX CenterY Width Height */
+						/* KEY_BACK */
+						<158 1360 90 160 180
+						/* KEY_MENU */
+						139 1360 270 160 180
+						/* KEY_HOMEPAGE */
+						172 1360 450 160 180
+						/* KEY SEARCH */
+						217 1360 630 160 180>;
+				};
+
+				cy,btn {
+					cy,name = "cyttsp5_btn";
+
+					cy,inp_dev_name = "cyttsp5_btn";
+				};
+
+				cy,proximity {
+					cy,name = "cyttsp5_proximity";
+
+					cy,inp_dev_name = "cyttsp5_proximity";
+					cy,abs =
+						/* ABS_DISTANCE, CY_PROXIMITY_MIN_VAL, CY_PROXIMITY_MAX_VAL, 0, 0 */
+						<0x19 0 1 0 0>;
+				};
+			};
+		};
+	};
+	
+	/*To disable gen-vkeys.c probe,avoid generate kobject*/
+	gen-vkeys {
+		compatible = "huawei,gen-vkeys";
+		label = "synaptics_rmi4_i2c";
+		qcom,disp-maxx = <720>;
+		qcom,disp-maxy = <1280>;
+		qcom,panel-maxx = <720>;
+		qcom,panel-maxy = <1369>;
+		qcom,key-codes = <158 172 139>;
+	};
+
+};

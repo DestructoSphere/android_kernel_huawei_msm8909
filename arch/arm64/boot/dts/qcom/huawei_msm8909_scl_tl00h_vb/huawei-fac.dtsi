@@ -1,0 +1,9 @@
+ / {
+        huawei_fac_info {
+                  compatible = "huawei,hw_fac_info";
+                  fac,product_name = "HUAWEI SCL-TL10";
+                  fac,hardware_ver = "HL2SCALE1MAI";
+                  fac,software_ver = "MSM8909_SCL_TL10_VB";
+                  status = "ok";
+        };
+};

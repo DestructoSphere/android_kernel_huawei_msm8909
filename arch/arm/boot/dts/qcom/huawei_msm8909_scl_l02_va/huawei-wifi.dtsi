@@ -1,0 +1,9 @@
+ / {
+        huawei_wifi_info {
+                  compatible = "huawei,hw_wifi_info";
+                  status = "ok";
+                  wifi,chiptype = "WIFI_QUALCOMM_WCN3610";
+                  wifi,pubfile_id = "scl_l02";
+                  wifi,fw_ver = "QCOM_WCN3610_2.0.2";
+        };
+};

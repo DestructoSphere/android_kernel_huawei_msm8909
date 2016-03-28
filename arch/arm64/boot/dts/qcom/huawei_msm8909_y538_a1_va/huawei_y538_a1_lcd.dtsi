@@ -1,0 +1,7 @@
+/* This file was created for y538's lcd, since no bias ic for this product */
+&mdss_dsi0 {
+	qcom,panel-supply-entries {
+		/delete-node/qcom,panel-supply-entry@2;
+		/delete-node/qcom,panel-supply-entry@3;
+	};
+};

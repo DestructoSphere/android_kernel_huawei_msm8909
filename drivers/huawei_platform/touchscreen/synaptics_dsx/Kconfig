@@ -1,0 +1,58 @@
+#
+# Synaptics DSX touchscreen driver configuration
+#
+
+#/*Add synaptics new driver "Synaptics DSX I2C V2.0"*/
+config TOUCHSCREEN_HUAWEI_DSX_I2C
+	tristate "Synaptics DSX I2C touchscreen"
+	depends on I2C
+	default n
+	help
+	  Say Y here if you have a Synaptics DSX I2C touchscreen
+	  connected to your system.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called synaptics_dsx_i2c.
+
+config TOUCHSCREEN_HUAWEI_DSX_RMI_DEV
+	tristate "Synaptics DSX touchscreen char device"
+	depends on I2C
+	default n
+	help
+	  This enables support for direct register access for Synaptics DSX
+	  touchscreens.
+
+config TOUCHSCREEN_HUAWEI_DSX_FW_UPDATE
+	tristate "Synaptics DSX touchscreen firmware update"
+	depends on I2C
+	default n
+	help
+	  This enables support for firmware update for Synaptics DSX
+	  touchscreens.
+
+config TOUCHSCREEN_HUAWEI_DSX_TEST_REPORTING
+	tristate "Synaptics DSX touchscreen test reporting"
+	depends on I2C
+	default n
+	help
+	  This enables support for test reporting for Synaptics DSX
+	  touchscreens.
+
+config TOUCHSCREEN_HUAWEI_DSX_PROXIMITY
+	tristate "Synaptics DSX touchscreen proximity"
+	depends on I2C
+	default n
+	help
+	  This enables support for proximity for Synaptics DSX
+	  touchscreens.
+
+config TOUCHSCREEN_HUAWEI_DSX_ESD
+	tristate "Synaptics DSX touchscreen esd"
+	depends on I2C
+	default n
+	help
+	  This enables support for proximity for Synaptics DSX
+	  touchscreens.
+

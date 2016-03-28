@@ -1,0 +1,5 @@
+#/* yuanxiaofeng add for sandisk emmc 4.5 firmware update begin */
+obj-$(CONFIG_MMC_SWRM) += swrm.o
+swrm-objs:= swrm_main.o swrm_mmc_api.o
+#/* yuanxiaofeng add for sandisk emmc 4.5 firmware update end */
+

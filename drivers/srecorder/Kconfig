@@ -1,0 +1,56 @@
+menuconfig SRECORDER
+	bool "SRecorder"
+	help
+		SRecorder is used to save panic log when kernel crash
+
+if SRECORDER
+
+config SRECORDER_VERSION
+	hex "Srecorder version"
+	default 0x0002
+
+config SRECORDER_IMEM_HEADER_PHYS_ADDR
+	hex "The physical address of the start-up header in imem"
+	default 0x08600100
+	
+config SRECORDER_IMEM_HEADER_PHYS_SIZE
+	hex "The size of the start-up header"
+	default 0x00000050
+	
+config SRECORDER_LOG_BUF_LEN
+	hex "The half length of the log buffer"
+	default 0x200000
+	
+config DUMP_CRASH_TIME
+	bool "Save crash reason and time"
+	default y
+
+config DUMP_SYS_INFO
+	bool "Save sys info"
+	default y
+
+config DUMP_ALLCPU_STACK
+	bool "Save all cpu's stack"
+	default y
+
+config DUMP_ALLPS_INFO
+	bool "Save all process' basic info"
+	default y
+
+config DUMP_CURRENT_PS_BACKTRACE
+	bool "Save the current process' backtace"
+	default y
+
+config DUMP_SLAB_INFO
+	bool "Save slab info"
+	default y
+
+config DUMP_DMESG
+	bool "Save dmesg info"
+	default y
+
+config POWERCOLLAPSE
+	bool "Save dmesg when power collapse happened"
+	default y
+
+endif # SRECORDER

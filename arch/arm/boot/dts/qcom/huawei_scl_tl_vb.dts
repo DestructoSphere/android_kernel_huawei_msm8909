@@ -1,0 +1,24 @@
+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+ 
+/dts-v1/;
+
+#include "msm8909-qrd.dtsi"
+#include "huawei_base.dtsi"
+#include "huawei_msm8909_scl_tl_vb/huawei.dtsi"
+
+/ {
+	model = "Qualcomm MSM 8909 HUAWEI SCL";
+        compatible = "qcom,msm8909-qrd", "qcom,msm8909", "qcom,qrd";
+	qcom,board-id= <8096 0>;
+	huawei,modem_id = <0xFDD40101 0x0>;
+};

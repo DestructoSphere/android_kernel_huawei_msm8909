@@ -1,0 +1,13 @@
+/ {
+    huawei_audio_info {
+        compatible = "huawei,hw_audio_info";
+        product-identifier = "y538-a1";
+        status = "ok";
+        builtin-master-mic-exist;
+        builtin-2nd-mic-exist;
+        hand_held_dual_mic_strategy;
+        loud_speaker_dual_mic_strategy;
+        huawei,hac_gpio = <&msm_gpio 99 0x0>;
+    };
+};
+

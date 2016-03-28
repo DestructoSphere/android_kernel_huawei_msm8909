@@ -1,0 +1,10 @@
+/ {
+        huawei_fm_info {
+                  compatible = "huawei,hw_fm_info";
+                  status = "ok";
+                  fm,sinr_threshold = "5" ;
+                  fm,sinr_samples = "10" ;
+                  fm,chiptype = "BT_FM_QUALCOMM_WCN3610";
+        };
+
+};

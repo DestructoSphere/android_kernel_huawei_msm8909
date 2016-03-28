@@ -1,0 +1,21 @@
+#MSG2138_GC
+config MSG2138_GC
+	tristate "MSG2138_GC Touchscreen Driver"
+	depends on HUAWEI_KERNEL
+	default y
+	help
+	  Core driver for MSG2138_GC Standard Product
+	  Say Y here if you have a MSG2138_GC touchscreen.
+	  If unsure, say N.
+	  To compile this driver as a module, choose M here.
+
+#MSG2138_SCAP_TEST
+config MSG2138_SCAP_TEST
+	tristate "MSG2138_SCAP_TEST Touchscreen detect"
+	#depends on HUAWEI_KERNEL
+	default n
+	help
+	  Core driver for MSG2138_SCAP_TEST Standard Product
+	  Say Y here if you have a MSG2138_SCAP_TEST touchscreen.
+	  If unsure, say N.
+	  To compile this driver as a module, choose M here.

@@ -1,0 +1,25 @@
+config HUAWEI_DRIVERS
+	bool "huawei drivers"
+	default y
+	help
+	  Say Y here if you want to build the huawei drivers.
+	  If unsure, say N here.
+
+config HUAWEI_SENSORS
+	bool "huawei sensors"
+	default y
+	help
+	  Say Y here if you want to build the huawei sensor drivers.If unsure, say N here.
+
+source "drivers/huawei_platform/sensor/Kconfig"
+
+config HUAWEI_TOUCH_SCREEN
+	bool "huawei touch screen driver"
+	default y
+	help
+	  Say Y here if you have any touch device connected to your system and want
+	  it to be available to applications. 
+	  Say N here if you have no touch device in your system.If unsure, say Y.
+	  To compile this driver as a module, choose M here: the  module will be called input.
+
+source "drivers/huawei_platform/touchscreen/Kconfig"

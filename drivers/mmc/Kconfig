@@ -1,0 +1,72 @@
+#
+# MMC subsystem configuration
+#
+
+menuconfig MMC
+	tristate "MMC/SD/SDIO card support"
+	depends on HAS_IOMEM
+	help
+	  This selects MultiMediaCard, Secure Digital and Secure
+	  Digital I/O support.
+
+	  If you want MMC/SD/SDIO support, you should say Y here and
+	  also to your specific host controller driver.
+
+config MMC_DEBUG
+	bool "MMC debugging"
+	depends on MMC != n
+	help
+	  This is an option for use by developers; most people should
+	  say N here.  This enables MMC core and driver debugging.
+
+config MMC_PERF_PROFILING
+	bool "MMC performance profiling"
+	depends on MMC != n
+	default n
+	help
+	  If you say Y here, support will be added for collecting
+	  performance numbers at the MMC Queue and Host layers.
+
+config HUAWEI_MMC
+        tristate "Secure Digital Host Controller Interface support"
+        depends on HUAWEI_KERNEL
+        default n
+        help
+          use huawei feature
+
+config HUAWEI_SDCARD_DSM
+	bool "Listen sdcard kernel err"
+	depends on HUAWEI_DSM != n
+	default n
+	help
+	  use huawei sdcard log radar
+
+config HUAWEI_EMMC_DSM
+	bool "Listen eMMC kernel err"
+	depends on HUAWEI_DSM != n
+	default n
+	help
+	  use huawei eMMC log radar
+
+config HUAWEI_EMMC_DSM_DEBUG
+	bool "Listen eMMC radar err on debug stage"
+	depends on HUAWEI_DSM != n
+	default n
+	help
+	  use device radar only to record emmc vdet log
+
+config MMC_SWRM
+       tristate "Sandisk Write Read Module"
+       depends on MMC != n
+       help
+         This option is used for updating Sandisk iNAND firmware.
+
+if MMC
+
+source "drivers/mmc/core/Kconfig"
+
+source "drivers/mmc/card/Kconfig"
+
+source "drivers/mmc/host/Kconfig"
+
+endif # MMC

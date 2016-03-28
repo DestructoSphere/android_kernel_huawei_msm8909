@@ -1,0 +1,9 @@
+ / {
+        huawei_fac_info {
+                  compatible = "huawei,hw_fac_info";
+                  fac,product_name = "HUAWEI SCL-L01";
+                  fac,hardware_ver = "HL3SCALEM";
+                  fac,software_ver = "MSM8909_SCL_L01_VB";
+                  status = "ok";
+        };
+};

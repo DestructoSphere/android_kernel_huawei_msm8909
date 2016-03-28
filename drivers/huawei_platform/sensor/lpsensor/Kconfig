@@ -1,0 +1,68 @@
+config HUAWEI_LP_SENSORS_ADUX1050
+	tristate "Support for prox sensor adux1050"
+	default n
+	help
+		Say Y to enable support adux1050 prox sensor
+
+config EVAL
+	bool "Eval : To enable the driver in evaluation mode for test "
+	depends on HUAWEI_LP_SENSORS_ADUX1050
+	default n
+	help
+		To use the generic sysfs path and modifications for the control attributes.
+
+config USE_FILP
+	bool "USE_FILP : To make use of the file access from the kernel driver "
+	depends on HUAWEI_LP_SENSORS_ADUX1050
+	default n
+	help
+		To enable the file access from the kernel for the purpose of storing and retrieving the calibration results in/from a file and further is enhanced for extraction of configuration during runtime.
+
+config ADUX1050_POLL
+	bool "POLL : To make use of the Polling method instead of ISR "
+	depends on HUAWEI_LP_SENSORS_ADUX1050
+	default n
+	help
+		To enable the polling and to set the sleep time through the sysfs
+				
+config HUAWEI_LP_SENSORS_APDS993X
+	tristate "Avago APDS993X combined als and proximity sensors"
+	depends on I2C
+	default n
+	help
+	  Say Y here if you want to build a driver for Avago APDS993X
+	  combined ambient light and proximity sensor chip.
+	  To compile this driver as a module, choose M here: the module will be called apds993x. If unsure, say N here.
+		  
+config HUAWEI_LP_SENSORS_PA224
+    tristate "pa224 als and proximity sensors"
+    depends on I2C
+	default n
+	help
+	  Say Y here if you want to build a driver for pa224 combined ambient light and proximity sensor chip.
+	  To compile this driver as a module, choose M here: the module will be called pa224. If unsure, say N here.
+
+config HUAWEI_LP_SENSORS_ROHM_RPR521
+	tristate "ROHM RPR0521 combined als and proximity sensors"
+	depends on I2C
+	default n
+	help
+	  Say Y here if you want to build a driver for ROHM RPR0521 combined ambient light and proximity sensor chip.
+	  To compile this driver as a module, choose M here: the module will be called rpr0521. If unsure, say N here.
+
+config HUAWEI_LP_SENSORS_ROHM_RGB_BH1745
+	tristate "ROHM RGB_BH1745 als sensors"
+	depends on I2C
+	default n
+	help
+	  Say Y here if you want to build a driver for RGB_BH1745 ambient light sensor chip.
+	  To compile this driver as a module, choose M here: the module will be called bh1745. If unsure, say N here.
+		  
+config HUAWEI_LP_SENSORS_AP3426
+	tristate "AP3426 3-in-1 digital ALPS+PS+IRLED sensor driver"
+	depends on I2C
+	default n
+	help
+	  Say Y here if you want to enable the AP3426 ALPS sensor driver.
+	  To compile this driver as a module, choose M here: the module will be called ap3426.
+

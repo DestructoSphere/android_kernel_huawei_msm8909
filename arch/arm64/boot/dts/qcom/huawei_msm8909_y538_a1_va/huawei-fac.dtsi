@@ -1,0 +1,9 @@
+ / {
+        huawei_fac_info {
+                  compatible = "huawei,hw_fac_info";
+                  fac,product_name = "HUAWEI Y538_A1";
+                  fac,hardware_ver = "HL1Y538A1M_VA";
+                  fac,software_ver = "MSM8909_Y538_A1_VA";
+                  status = "ok";
+        };
+};

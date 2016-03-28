@@ -1,0 +1,9 @@
+ / {
+        huawei_fac_info {
+                  compatible = "huawei,hw_fac_info";
+                  fac,product_name = "HUAWEI SCL-CL00";
+                  fac,hardware_ver = "HL1SCALE1M";
+                  fac,software_ver = "MSM8909_SCL_CL_VC";
+                  status = "ok";
+        };
+};

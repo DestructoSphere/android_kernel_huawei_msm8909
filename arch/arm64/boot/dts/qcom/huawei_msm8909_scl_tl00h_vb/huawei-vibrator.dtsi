@@ -1,0 +1,12 @@
+&spmi_bus{
+	qcom,pm8909@1 {
+		pm8909_vib: qcom,vibrator@c000 {
+		compatible = "qcom,qpnp-vibrator";
+		qcom,vib-timeout-ms = <15000>;
+		qcom,vib-vtg-level-mV = <3000>;
+		reg = <0xc000 0x100>;
+		label = "vibrator";
+		status = "ok";
+		};
+	};
+};

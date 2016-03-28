@@ -1,0 +1,26 @@
+/{
+	hw-dev-detect {
+		compatible = "huawei,hw-dev-detect";
+		reg = <0x0 0x12C>;
+		i2c,touch_panel = <1>;
+		i2c,compass = <1>;
+		i2c,g_sensor = <1>;
+		i2c,camera_main = <1>;
+		i2c,camera_slave = <0>;
+		i2c,keypad = <0>;
+		i2c,aps = <1>;
+		i2c,gyroscope = <0>;
+		i2c,nfc = <0>;
+		i2c,dc_dc = <0>;
+		i2c,speaker = <0>;
+		i2c,ofn = <0>;
+		i2c,flash = <0>;
+		i2c,l_sensor = <1>;
+		i2c,charge = <0>;
+		i2c,battery = <0>;
+		i2c,ntc = <0>;
+		i2c,mhl = <0>;
+		i2c,audience = <0>;
+		status = "ok";
+	};
+};

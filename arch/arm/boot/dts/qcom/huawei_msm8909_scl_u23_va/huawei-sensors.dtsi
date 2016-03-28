@@ -1,0 +1,267 @@
+/*use fromdos convert file format to linux*/
+/* Copyright (c) 2013 The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+&tlmm_pinmux {
+	lis3dh_int1_pin {
+		qcom,pins = <&gp 96>;
+		qcom,num-grp-pins = <1>;
+		label = "lis3dh_int_pin";
+		lis3dh_int1_default: int1_default {
+			drive-strength = <6>;
+			bias-pull-down;
+		};
+		lis3dh_int1_sleep: int1_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	kx023_int1_pin {
+		qcom,pins = <&gp 96>;
+		qcom,num-grp-pins = <1>;
+		label = "kx023_int_pin";
+		kx023_int1_default: int1_default {
+			drive-strength = <6>;
+			bias-pull-dowm;
+		};
+		kx023_int1_sleep: int1_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	apds99xx_int_pin {
+		qcom,pins = <&gp 94>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "apds99xx-irq";
+		apds99xx_default: apds99xx_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		apds99xx_sleep: apds99xx_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	rpr521_int_pin {
+		qcom,pins = <&gp 94>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "rpr521-irq";
+		rpr521_default: rpr521_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		rpr521_sleep: rpr521_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	apds9930_int_pin {
+		qcom,pins = <&gp 94>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "apds9930-irq";
+		apds9930_default: apds9930_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		apds9930_sleep: apds9930_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	ak8963_int_pin {
+		qcom,pins = <&gp 65>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "ak8963-irq";
+		ak8963_default: ak8963_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		ak8963_sleep: ak8963_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+	akm_reset_pin {
+		qcom,pins = <&gp 36>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "akm_reset_pin";
+		akm_default: akm_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		akm_sleep: akm_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
+};
+
+&i2c_1 { /* BLSP1 QUP1 */
+
+	avago@39 {
+		compatible = "avago,apds9930";
+		reg = <0x39>;
+		pinctrl-names = "default","sleep";
+		pinctrl-0 = <&apds9930_default>;
+		pinctrl-1 = <&apds9930_sleep>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <94 0x2002>;
+		vdd-supply = <&pm8909_l17>;
+		vio-supply = <&pm8909_l6>;
+		avago,irq-gpio = <&msm_gpio 94 0x2002>;
+		avago,ps_threshold = <600>;
+		avago,ps_hysteresis_threshold = <500>;
+		avago,ps_pulse = <8>;
+		avago,ps_pgain = <0>;
+		avago,als_B = <1860>;
+		avago,als_C = <750>;
+		avago,als_D = <1290>;
+		avago,ga_value = <48>;
+		avago,ga_a_value = <200>;
+		avago,ga_c_value = <600>;
+		avago,ga_d_value = <180>;
+		avago,window = <95>;
+		avago,wave = <50>;
+		avago,ga_e_value = <210>;
+		avago,ga_f_value = <50>;
+		avago,i2c-scl-gpio = <&msm_gpio 7 0x0>;
+		avago,i2c-sda-gpio = <&msm_gpio 6 0x0>;
+	};
+	rpr521@38 {
+		compatible = "rohm,rpr521";
+		reg = <0x38>;
+		pinctrl-names = "default","sleep";
+		pinctrl-0 = <&rpr521_default>;
+		pinctrl-1 = <&rpr521_sleep>;
+		interrupt-parent = <&msm_gpio>;
+		interrupts = <94 0x2002>;
+		vdd-supply = <&pm8909_l17>;
+		vio-supply = <&pm8909_l6>;
+		rpr521,irq-gpio = <&msm_gpio 94 0x2002>;
+		rpr521,ps_threshold = <600>;
+		rpr521,window = <102>;
+		rpr521,wave = <70>;
+		rpr521,ps_gain = <4>;
+		rpr521,diff_tp = <1>;
+		rpr521,data0_array = <7562 3766 2756 1810>;
+		rpr521,data1_array = <5220 1926 1232 580>;
+		rpr521,judge_array = <900 1350 2416 3100>;
+		//junda
+		rpr521,data0_array_ju = <11967 6069 4129 1810>;
+		rpr521,data1_array_ju = <6974 2976 1640 580>;
+		rpr521,judge_array_ju = <900 1580 2416 3100>;
+		//ofilm
+		rpr521,data0_array_of = <11081 4638 3010 1810>;
+		rpr521,data1_array_of = <7210 2276 1221 580>;
+		rpr521,judge_array_of = <900 1480 2416 3100>;
+		rpr521,i2c-scl-gpio = <&msm_gpio 7 0x0>;
+		rpr521,i2c-sda-gpio = <&msm_gpio 6 0x0>;
+	};
+
+	st@18 {
+		compatible = "st,lis3dh";
+		reg = <0x18>;
+		pinctrl-names = "lis3dh_default","lis3dh_sleep";
+		pinctrl-0 = <&lis3dh_int1_default>;
+		pinctrl-1 = <&lis3dh_int1_sleep>;
+		interrupt-parent = <&msm_gpio>;
+		vdd-supply = <&pm8909_l17>;
+		vddio-supply = <&pm8909_l6>;
+		st,min-interval = <5>;
+		st,init-interval = <200>;
+		st,axis-map-x = <0>;
+		st,axis-map-y = <1>;
+		st,axis-map-z = <2>;
+		/*1 is bottom and others means top*/
+                st,axis-map-bottom=<0>;
+		st,g-range = <2>;
+		st,gpio-int1 = <&msm_gpio 96 0x2002>;
+		/delete-property/st,negate-x;
+		st,negate-z;
+		st,negate-y;
+		st,i2c-scl-gpio = <&msm_gpio 7 0x0>;
+		st,i2c-sda-gpio = <&msm_gpio 6 0x0>;
+	};
+	Rohm@1e {
+		compatible = "kionix,kx023";
+		reg = <0x1e>;
+		pinctrl-names = "kx023_default","kx023_sleep";
+		pinctrl-0 = <&kx023_int1_default>;
+		pinctrl-1 = <&kx023_int1_sleep>;
+		vdd-supply = <&pm8909_l17>;
+		vddio-supply = <&pm8909_l6>;
+		gs,int1_gpio = <&msm_gpio 96 0x2002>;
+		/*1 is bottom and others means top*/
+                gs,direct = <0>;
+		gs,min_interval = <5>;
+		gs,poll_interval = <200>;
+		gs,accel_direction = <1>;
+		gs,accel_irq_use_drdy = <0>;
+		gs,accel_g_range = <0>;
+		gs,accel_res = <0>;
+		gs,i2c-scl-gpio = <&msm_gpio 7 0x0>;
+		gs,i2c-sda-gpio = <&msm_gpio 6 0x0>;
+	};
+	akm@c {
+		compatible = "ak,ak09911";
+		reg = <0x0c>;
+		pinctrl-names = "default","sleep";
+		pinctrl-0 = <&akm_default>;
+		pinctrl-1 = <&akm_sleep>;
+		vdd-supply = <&pm8909_l17>;
+		vio-supply = <&pm8909_l6>;
+		akm,layout = <0x6>;
+		akm,gpio_rstn = <&msm_gpio 36 0x0>;
+		akm,rst-not-use-gpio;
+		akm,auto-report;
+		akm,pdc_file_name = "pdc_scale_u23.txt";
+		akm,i2c-scl-gpio = <&msm_gpio 7 0x0>;
+		akm,i2c-sda-gpio = <&msm_gpio 6 0x0>;
+	};
+};
+
+&rpm_bus {
+	rpm-regulator-ldoa6 {
+		status = "okay";
+		pm8909_l6: regulator-l6 {
+			status = "okay";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			qcom,init-voltage = <1800000>;
+			regulator-boot-on;
+			regulator-always-on;
+		};
+	};
+
+	rpm-regulator-ldoa17 {
+		status = "okay";
+		pm8909_l17: regulator-l17 {
+			status = "okay";
+			regulator-min-microvolt = <2800000>;
+			regulator-max-microvolt = <2850000>;
+			qcom,init-voltage = <2800000>;
+			regulator-boot-on;
+			regulator-always-on;
+		};
+	};
+};

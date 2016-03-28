@@ -1,0 +1,49 @@
+config HUAWEI_ACCEL_SENSORS
+        bool "huawei accelerometer sensors"
+		default y
+        help
+          Say Y here if you want to build the huawei accelerometer sensor drivers.
+		  If unsure, say N here.
+
+source "drivers/huawei_platform/sensor/accelerometer/Kconfig"
+
+config HUAWEI_COMPASS_SENSORS
+        bool "huawei accelerometer sensors"
+		default y
+        help
+          Say Y here if you want to build the huawei compass sensor drivers.
+		  If unsure, say N here.
+
+source "drivers/huawei_platform/sensor/compass/Kconfig"
+
+config HUAWEI_HALL_SENSORS
+        bool "huawei hall sensors"
+		default y
+        help
+          Say Y here if you want to build the huawei hall sensor drivers.
+		  If unsure, say N here.
+
+source "drivers/huawei_platform/sensor/hallsensor/Kconfig"
+		  
+config HUAWEI_LP_SENSORS
+        bool "huawei als and proximity sensors"
+		default y
+        help
+          Say Y here if you want to build the huawei als and proximity sensor drivers.
+		  If unsure, say N here.
+
+source "drivers/huawei_platform/sensor/lpsensor/Kconfig"
+
+config HUAWEI_SENSOR_INFO
+        tristate "Support for sensor self_adapt"
+        depends on HUAWEI_KERNEL
+        default n
+        help
+          Say Y to enable support self-adapt
+
+config SENSOR_INFO
+        tristate "Support for sensor information"
+        depends on HUAWEI_KERNEL
+        default n
+        help
+          Say Y to enable support self-adapt

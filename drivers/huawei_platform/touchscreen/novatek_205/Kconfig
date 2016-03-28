@@ -1,0 +1,8 @@
+
+#config NOVATEK_XXXX
+#	bool "This is a module"
+#	depends on NOVATEK_XXXX
+#	default n
+#	help
+#     	  description
+
