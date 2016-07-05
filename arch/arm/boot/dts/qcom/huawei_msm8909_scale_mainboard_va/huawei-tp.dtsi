@@ -70,7 +70,7 @@
 
 				/*Defination of report key value  for different gestures*/
 				cy,easy_wakeup_gesture_keys = 
-				<	59 /*0.Double tap:KEY_F1*/
+				<	116 /*0.Double tap:POWER*/
 					60 /*1.Single finger slide from left to right*/
 					61 /*2.Single finger slide from right to left:KEY_F3*/
 					62 /*3.Single finger slide from top to bottom*/

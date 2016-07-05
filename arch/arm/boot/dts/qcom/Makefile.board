@@ -21,7 +21,8 @@ dtb-$(CONFIG_ARCH_MSM8909) += 	huawei_scl_al00_vc.dtb \
 	huawei_y538_a1_vb.dtb \
 	huawei_scl_u21_vb.dtb \
 	huawei_scl_al00_va.dtb \
-
+	huawei_scl_l04_va.dtb \
+	huawei_scl_u31_va.dtb \
  
  
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE_NAMES))

@@ -1,0 +1,9 @@
+ / {
+        huawei_fac_info {
+                  compatible = "huawei,hw_fac_info";
+                  fac,product_name = "HUAWEI SCL-L04";
+                  fac,hardware_ver = "HL3SCALETM";
+                  fac,software_ver = "MSM8909_SCL_L04_VA";
+                  status = "ok";
+        };
+};
