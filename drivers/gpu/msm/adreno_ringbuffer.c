@@ -326,8 +326,9 @@ int adreno_ringbuffer_read_pfp_ucode(struct kgsl_device *device)
 	return 0;
 
 err:
-	KGSL_DRV_FATAL(device, "Failed to read pfp microcode %s\n",
+	KGSL_DRV_CRIT(device, "Failed to read pfp microcode %s\n",
 		adreno_dev->gpucore->pfpfw_name);
+	return ret;
 }
 
 /**
@@ -769,7 +770,7 @@ adreno_ringbuffer_addcmds(struct adreno_ringbuffer *rb,
 
 	if (drawctxt != NULL && kgsl_context_detached(&drawctxt->base) &&
 		!(flags & KGSL_CMD_FLAGS_INTERNAL_ISSUE))
-		return -EINVAL;
+		return -ENOENT;
 
 	rb->timestamp++;
 
@@ -814,10 +815,6 @@ adreno_ringbuffer_addcmds(struct adreno_ringbuffer *rb,
 
 	total_sizedwords += (secured_ctxt) ? 26 : 0;
 
-	/* Add two dwords for the CP_INTERRUPT */
-	total_sizedwords +=
-		(drawctxt || (flags & KGSL_CMD_FLAGS_INTERNAL_ISSUE)) ?  2 : 0;
-
 	/* context rollover */
 	if (adreno_is_a3xx(adreno_dev))
 		total_sizedwords += 3;
@@ -847,8 +844,6 @@ adreno_ringbuffer_addcmds(struct adreno_ringbuffer *rb,
 	ringcmds = adreno_ringbuffer_allocspace(rb, total_sizedwords);
 	if (IS_ERR(ringcmds))
 		return PTR_ERR(ringcmds);
-	if (ringcmds == NULL)
-		return -ENOSPC;
 
 	*ringcmds++ = cp_nop_packet(1);
 	*ringcmds++ = KGSL_CMD_IDENTIFIER;
@@ -952,7 +947,10 @@ adreno_ringbuffer_addcmds(struct adreno_ringbuffer *rb,
 	 * set and hence the rb timestamp will be used in else statement below.
 	 */
 	*ringcmds++ = cp_type3_packet(CP_EVENT_WRITE, 3);
-	*ringcmds++ = CACHE_FLUSH_TS;
+	if (drawctxt || (flags & KGSL_CMD_FLAGS_INTERNAL_ISSUE))
+		*ringcmds++ = CACHE_FLUSH_TS | (1 << 31);
+	else
+		*ringcmds++ = CACHE_FLUSH_TS;
 
 	if (drawctxt && !(flags & KGSL_CMD_FLAGS_INTERNAL_ISSUE)) {
 		*ringcmds++ = gpuaddr + KGSL_MEMSTORE_OFFSET(context_id,
@@ -966,11 +964,6 @@ adreno_ringbuffer_addcmds(struct adreno_ringbuffer *rb,
 		*ringcmds++ = gpuaddr + KGSL_MEMSTORE_RB_OFFSET(rb,
 							eoptimestamp);
 		*ringcmds++ = timestamp;
-	}
-
-	if (drawctxt || (flags & KGSL_CMD_FLAGS_INTERNAL_ISSUE)) {
-		*ringcmds++ = cp_type3_packet(CP_INTERRUPT, 1);
-		*ringcmds++ = CP_INTERRUPT_RB;
 	}
 
 	if (adreno_is_a3xx(adreno_dev)) {
@@ -1322,21 +1315,23 @@ int adreno_ringbuffer_submitcmd(struct adreno_device *adreno_dev,
 					&link[0], (cmds - link),
 					cmdbatch->timestamp, time);
 
-	/* Put the timevalues in the profiling buffer */
-	if (cmdbatch_user_profiling) {
-		profile_buffer->wall_clock_s = time->utime.tv_sec;
-		profile_buffer->wall_clock_ns = time->utime.tv_nsec;
-		profile_buffer->gpu_ticks_queued = time->ticks;
+	if (!ret) {
+		/* Put the timevalues in the profiling buffer */
+		if (cmdbatch_user_profiling) {
+			profile_buffer->wall_clock_s = time->utime.tv_sec;
+			profile_buffer->wall_clock_ns = time->utime.tv_nsec;
+			profile_buffer->gpu_ticks_queued = time->ticks;
+		}
 	}
-
-	/* Corresponding unmap to the memdesc map of profile_buffer */
-	if (entry)
-		kgsl_memdesc_unmap(&entry->memdesc);
 
 	kgsl_cffdump_regpoll(device,
 		adreno_getreg(adreno_dev, ADRENO_REG_RBBM_STATUS) << 2,
 		0x00000000, 0x80000000);
 done:
+	/* Corresponding unmap to the memdesc map of profile_buffer */
+	if (entry)
+		kgsl_memdesc_unmap(&entry->memdesc);
+
 	trace_kgsl_issueibcmds(device, context->id, cmdbatch,
 			numibs, cmdbatch->timestamp,
 			cmdbatch->flags, ret, drawctxt->type);

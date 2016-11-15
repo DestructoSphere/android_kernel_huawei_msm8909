@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2007-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2002,2007-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -590,14 +590,14 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 			struct kgsl_pagetable *pagetable,
 			size_t size)
 {
-	int pcount = 0, ret = 0;
-	int j, page_size, sglen_alloc, sglen = 0;
 	size_t len;
-	struct page **pages = NULL;
-	pgprot_t page_prot = pgprot_writecombine(PAGE_KERNEL);
+	int ret = 0, page_size, sglen_alloc, sglen = 0;
 	void *ptr;
 	unsigned int align;
-	int step = ((VMALLOC_END - VMALLOC_START)/8) >> PAGE_SHIFT;
+
+	size = PAGE_ALIGN(size);
+	if (size == 0 || size > UINT_MAX)
+		return -EINVAL;
 
 	align = (memdesc->flags & KGSL_MEMALIGN_MASK) >> KGSL_MEMALIGN_SHIFT;
 
@@ -628,18 +628,6 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 		goto done;
 	}
 
-	/*
-	 * Allocate space to store the list of pages to send to vmap. This is an
-	 * array of pointers so we can track 1024 pages per page of allocation
-	 */
-
-	pages = kgsl_malloc(sglen_alloc * sizeof(struct page *));
-
-	if (pages == NULL) {
-		ret = -ENOMEM;
-		goto done;
-	}
-
 	if (!is_vmalloc_addr(memdesc->sg))
 		kmemleak_not_leak(memdesc->sg);
 
@@ -665,6 +653,8 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 				__GFP_NO_KSWAPD | __GFP_NOWARN;
 		else
 			gfp_mask |= GFP_KERNEL;
+
+		gfp_mask |= __GFP_ZERO;
 
 		page = alloc_pages(gfp_mask, get_order(page_size));
 
@@ -693,8 +683,12 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 			goto done;
 		}
 
-		for (j = 0; j < page_size >> PAGE_SHIFT; j++)
-			pages[pcount++] = nth_page(page, j);
+		for (j = 0; j < page_size >> PAGE_SHIFT; j++) {
+			struct page *p = nth_page(page, j);
+			ptr = kmap_atomic(p);
+			dmac_flush_range(ptr, ptr + PAGE_SIZE);
+			kunmap_atomic(ptr);
+		}
 
 		sg_set_page(&memdesc->sg[sglen++], page, page_size, 0);
 		len -= page_size;
@@ -702,55 +696,13 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 
 	memdesc->sglen = sglen;
 	memdesc->size = size;
-	sg_mark_end(&memdesc->sg[sglen - 1]);
 
-	/*
-	 * All memory that goes to the user has to be zeroed out before it gets
-	 * exposed to userspace. This means that the memory has to be mapped in
-	 * the kernel, zeroed (memset) and then unmapped.  This also means that
-	 * the dcache has to be flushed to ensure coherency between the kernel
-	 * and user pages. We used to pass __GFP_ZERO to alloc_page which mapped
-	 * zeroed and unmaped each individual page, and then we had to turn
-	 * around and call flush_dcache_page() on that page to clear the caches.
-	 * This was killing us for performance. Instead, we found it is much
-	 * faster to allocate the pages without GFP_ZERO, map a chunk of the
-	 * range ('step' pages), memset it, flush it and then unmap
-	 * - this results in a factor of 4 improvement for speed for large
-	 * buffers. There is a small decrease in speed for small buffers,
-	 * but only on the order of a few microseconds at best. The 'step'
-	 * size is based on a guess at the amount of free vmalloc space, but
-	 * will scale down if there's not enough free space.
-	 */
-	for (j = 0; j < pcount; j += step) {
-		step = min(step, pcount - j);
-
-		ptr = vmap(&pages[j], step, VM_IOREMAP, page_prot);
-
-		if (ptr != NULL) {
-			memset(ptr, 0, step * PAGE_SIZE);
-			dmac_flush_range(ptr, ptr + step * PAGE_SIZE);
-			vunmap(ptr);
-		} else {
-			int k;
-			/* Very, very, very slow path */
-
-			for (k = j; k < j + step; k++) {
-				ptr = kmap_atomic(pages[k]);
-				memset(ptr, 0, PAGE_SIZE);
-				dmac_flush_range(ptr, ptr + PAGE_SIZE);
-				kunmap_atomic(ptr);
-			}
-			/* scale down the step size to avoid this path */
-			if (step > 1)
-				step >>= 1;
-		}
-	}
+	if (sglen > 0)
+		sg_mark_end(&memdesc->sg[sglen - 1]);
 
 done:
 	KGSL_STATS_ADD(memdesc->size, kgsl_driver.stats.page_alloc,
 		kgsl_driver.stats.page_alloc_max);
-
-	kgsl_free(pages);
 
 	if (ret)
 		kgsl_sharedmem_free(memdesc);

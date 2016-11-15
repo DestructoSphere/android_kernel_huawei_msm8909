@@ -2646,6 +2646,38 @@ struct asm_flac_cfg {
 	u16 md5_sum;
 };
 
+struct asm_alac_cfg {
+	u32 frame_length;
+	u8 compatible_version;
+	u8 bit_depth;
+	u8 pb;
+	u8 mb;
+	u8 kb;
+	u8 num_channels;
+	u16 max_run;
+	u32 max_frame_bytes;
+	u32 avg_bit_rate;
+	u32 sample_rate;
+	u32 channel_layout_tag;
+};
+
+struct asm_vorbis_cfg {
+	u32 bit_stream_fmt;
+};
+
+struct asm_ape_cfg {
+	u16 compatible_version;
+	u16 compression_level;
+	u32 format_flags;
+	u32 blocks_per_frame;
+	u32 final_frame_blocks;
+	u32 total_frames;
+	u16 bits_per_sample;
+	u16 num_channels;
+	u32 sample_rate;
+	u32 seek_table_present;
+};
+
 struct asm_softpause_params {
 	u32 enable;
 	u32 period;
@@ -2989,6 +3021,21 @@ struct asm_aac_enc_cfg_v2 {
 
 } __packed;
 
+struct asm_vorbis_fmt_blk_v2 {
+	struct apr_hdr hdr;
+	struct asm_data_cmd_media_fmt_update_v2 fmtblk;
+	u32          bit_stream_fmt;
+/* Bit stream format.
+ * Supported values:
+ * - 0 -- Raw bitstream
+ * - 1 -- Transcoded bitstream
+ *
+ * Transcoded bitstream containing the size of the frame as the first
+ * word in each frame.
+ */
+
+} __packed;
+
 struct asm_flac_fmt_blk_v2 {
 	struct apr_hdr hdr;
 	struct asm_data_cmd_media_fmt_update_v2 fmtblk;
@@ -3053,6 +3100,42 @@ struct asm_flac_fmt_blk_v2 {
 	u16 reserved;
 /* Clients must set this field to zero
  */
+
+} __packed;
+
+struct asm_alac_fmt_blk_v2 {
+	struct apr_hdr hdr;
+	struct asm_data_cmd_media_fmt_update_v2 fmtblk;
+
+	u32 frame_length;
+	u8 compatible_version;
+	u8 bit_depth;
+	u8 pb;
+	u8 mb;
+	u8 kb;
+	u8 num_channels;
+	u16 max_run;
+	u32 max_frame_bytes;
+	u32 avg_bit_rate;
+	u32 sample_rate;
+	u32 channel_layout_tag;
+
+} __packed;
+
+struct asm_ape_fmt_blk_v2 {
+	struct apr_hdr hdr;
+	struct asm_data_cmd_media_fmt_update_v2 fmtblk;
+
+	u16 compatible_version;
+	u16 compression_level;
+	u32 format_flags;
+	u32 blocks_per_frame;
+	u32 final_frame_blocks;
+	u32 total_frames;
+	u16 bits_per_sample;
+	u16 num_channels;
+	u32 sample_rate;
+	u32 seek_table_present;
 
 } __packed;
 
@@ -3456,11 +3539,14 @@ struct asm_amrwbplus_fmt_blk_v2 {
 
 } __packed;
 
-#define ASM_MEDIA_FMT_AC3_DEC                   0x00010BF6
-#define ASM_MEDIA_FMT_EAC3_DEC                   0x00010C3C
+#define ASM_MEDIA_FMT_AC3_DEC                0x00010BF6
+#define ASM_MEDIA_FMT_EAC3_DEC               0x00010C3C
 #define ASM_MEDIA_FMT_DTS                    0x00010D88
 #define ASM_MEDIA_FMT_MP2                    0x00010DE9
 #define ASM_MEDIA_FMT_FLAC                   0x00010C16
+#define ASM_MEDIA_FMT_ALAC                   0x00012F31
+#define ASM_MEDIA_FMT_VORBIS                 0x00010C15
+#define ASM_MEDIA_FMT_APE                    0x00012F32
 
 
 /* Media format ID for adaptive transform acoustic coding. This
@@ -4207,6 +4293,8 @@ struct asm_stream_cmd_open_write_v3 {
  * - #ASM_MEDIA_FMT_FR_FS
  * - #ASM_MEDIA_FMT_VORBIS
  * - #ASM_MEDIA_FMT_FLAC
+ * - #ASM_MEDIA_FMT_ALAC
+ * - #ASM_MEDIA_FMT_APE
  * - #ASM_MEDIA_FMT_EXAMPLE
  */
 } __packed;
@@ -6659,6 +6747,21 @@ struct asm_eq_params {
     AUDPROC_MODULE_ID_BASS_BOOST.
 */
 #define AUDPROC_PARAM_ID_BASS_BOOST_STRENGTH                     0x000108A4
+
+/** ID of the PBE module.
+    This module supports the following parameter IDs:
+    - #AUDPROC_PARAM_ID_PBE_ENABLE
+    - #AUDPROC_PARAM_ID_PBE_PARAM_CONFIG
+*/
+#define AUDPROC_MODULE_ID_PBE                                    0x00010C2A
+/** ID of the Bass Boost enable parameter used by
+    AUDPROC_MODULE_ID_BASS_BOOST.
+*/
+#define AUDPROC_PARAM_ID_PBE_ENABLE                              0x00010C2B
+/** ID of the Bass Boost mode parameter used by
+    AUDPROC_MODULE_ID_BASS_BOOST.
+*/
+#define AUDPROC_PARAM_ID_PBE_PARAM_CONFIG                        0x00010C49
 
 /** ID of the Virtualizer module. This module supports the
     following parameter IDs:
