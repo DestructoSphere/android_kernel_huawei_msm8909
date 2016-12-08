@@ -53,6 +53,9 @@
 
 #include <linux/types.h>
 
+/* Define framesize to fix srs build */
+#define AMR_WB_FRAMESIZE 61
+
 /* AUDIO CODECS SUPPORTED */
 #define MAX_NUM_CODECS 32
 #define MAX_NUM_CODEC_DESCRIPTORS 32
